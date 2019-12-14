@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.epi.exam.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.epi.exam.entity.User">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <id column="telnumber" jdbcType="VARCHAR" property="telnumber"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="department" jdbcType="VARCHAR" property="department"/>
+        <result column="which_class" jdbcType="VARCHAR" property="whichClass"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="epi_department" jdbcType="VARCHAR" property="epiDepartment"/>
+        <result column="epi_position" jdbcType="VARCHAR" property="epiPosition"/>
+        <result column="join_time" jdbcType="DATE" property="joinTime"/>
+        <result column="join_batch" jdbcType="VARCHAR" property="joinBatch"/>
+        <result column="office_number" jdbcType="VARCHAR" property="officeNumber"/>
+        <result column="age" jdbcType="DATE" property="age"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, telnumber, name, password, sex, department, which_class, email, epi_department,
+    epi_position, join_time, join_batch, office_number, age
+  </sql>
+    <sql id="no_password">
+    id, telnumber, name, sex, department, which_class, email, epi_department,
+    epi_position, join_time, join_batch, office_number, age
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="no_password"/>
+        from user
+        where id = #{id,jdbcType=VARCHAR}
+        and telnumber = #{telnumber,jdbcType=VARCHAR}
+    </select>
+    <select id="getUserByTelnumber" resultType="com.epi.exam.entity.User">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where telnumber = #{telnumber,jdbcType=VARCHAR}
+    </select>
+    <select id="selectById" resultType="com.epi.exam.entity.User">
+        select
+        <include refid="no_password"/>
+        from user
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAll" resultType="com.epi.exam.entity.User">
+        select
+        <include refid="no_password"/>
+        from user
+    </select>
+    <select id="selectUserByDepartment" resultType="com.epi.exam.entity.User">
+        select
+        <include refid="no_password"/>
+        from user
+        where department=#{department,jdbcType=VARCHAR}
+    </select>
+    <select id="selectUserByJoinBatch" resultType="com.epi.exam.entity.User">
+        select
+        <include refid="no_password"/>
+        from user
+        where join_batch=#{joinBatch,jdbcType=VARCHAR}
+
+    </select>
+    <select id="selectUserByEpiDepartment" resultType="com.epi.exam.entity.User">
+        select
+        <include refid="no_password"/>
+        from user
+        where epi_department=#{epiDepartment,jdbcType=VARCHAR}
+
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from user
+    where id = #{id,jdbcType=VARCHAR}
+      or telnumber = #{telnumber,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteById" parameterType="String">
+   delete from user
+    where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.epi.exam.entity.User">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select REPLACE(UUID(),'-','')
+        </selectKey>
+        insert into user (id, telnumber, name,
+        password, sex, department,
+        which_class, email, epi_department,
+        epi_position, join_time, join_batch,
+        office_number, age)
+        values (#{id,jdbcType=VARCHAR}, #{telnumber,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR},
+        #{whichClass,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{epiDepartment,jdbcType=VARCHAR},
+        #{epiPosition,jdbcType=VARCHAR}, #{joinTime,jdbcType=DATE}, #{joinBatch,jdbcType=VARCHAR},
+        #{officeNumber,jdbcType=VARCHAR}, #{age,jdbcType=DATE})
+    </insert>
+    <insert id="insertSelective" parameterType="com.epi.exam.entity.User">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select REPLACE(UUID(),'-','')
+        </selectKey>
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="telnumber != null">
+                telnumber,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="department != null">
+                department,
+            </if>
+            <if test="whichClass != null">
+                which_class,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="epiDepartment != null">
+                epi_department,
+            </if>
+            <if test="epiPosition != null">
+                epi_position,
+            </if>
+            <if test="joinTime != null">
+                join_time,
+            </if>
+            <if test="joinBatch != null">
+                join_batch,
+            </if>
+            <if test="officeNumber != null">
+                office_number,
+            </if>
+            <if test="age != null">
+                age,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="telnumber != null">
+                #{telnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="department != null">
+                #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="whichClass != null">
+                #{whichClass,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="epiDepartment != null">
+                #{epiDepartment,jdbcType=VARCHAR},
+            </if>
+            <if test="epiPosition != null">
+                #{epiPosition,jdbcType=VARCHAR},
+            </if>
+            <if test="joinTime != null">
+                #{joinTime,jdbcType=DATE},
+            </if>
+            <if test="joinBatch != null">
+                #{joinBatch,jdbcType=VARCHAR},
+            </if>
+            <if test="officeNumber != null">
+                #{officeNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.epi.exam.entity.User">
+        update user
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="department != null">
+                department = #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="whichClass != null">
+                which_class = #{whichClass,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="epiDepartment != null">
+                epi_department = #{epiDepartment,jdbcType=VARCHAR},
+            </if>
+            <if test="epiPosition != null">
+                epi_position = #{epiPosition,jdbcType=VARCHAR},
+            </if>
+            <if test="joinTime != null">
+                join_time = #{joinTime,jdbcType=DATE},
+            </if>
+            <if test="joinBatch != null">
+                join_batch = #{joinBatch,jdbcType=VARCHAR},
+            </if>
+            <if test="officeNumber != null">
+                office_number = #{officeNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                age = #{age,jdbcType=DATE},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+        and telnumber = #{telnumber,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.epi.exam.entity.User">
+    update user
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      department = #{department,jdbcType=VARCHAR},
+      which_class = #{whichClass,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      epi_department = #{epiDepartment,jdbcType=VARCHAR},
+      epi_position = #{epiPosition,jdbcType=VARCHAR},
+      join_time = #{joinTime,jdbcType=DATE},
+      join_batch = #{joinBatch,jdbcType=VARCHAR},
+      office_number = #{officeNumber,jdbcType=VARCHAR},
+      age = #{age,jdbcType=DATE}
+    where id = #{id,jdbcType=VARCHAR}
+      and telnumber = #{telnumber,jdbcType=VARCHAR}
+  </update>
+    <update id="updateByTelnumber" parameterType="String">
+    update user
+    set password = #{param1,jdbcType=VARCHAR}
+    where telnumber = #{param2,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

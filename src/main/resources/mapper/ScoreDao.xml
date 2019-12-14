@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.epi.exam.dao.ScoreDao">
+    <resultMap id="BaseResultMap" type="com.epi.exam.entity.Score">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="exam_id" jdbcType="VARCHAR" property="examId"/>
+        <result column="department" jdbcType="VARCHAR" property="department"/>
+        <result column="score" jdbcType="DECIMAL" property="score"/>
+        <result column="student_id" jdbcType="VARCHAR" property="studentId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, exam_id, department, score, student_id
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from score
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from score
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.epi.exam.entity.Score">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select REPLACE(UUID(),'-','')
+        </selectKey>
+        insert into score (id, exam_id, department,
+        score, student_id)
+        values (#{id,jdbcType=VARCHAR}, #{examId,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR},
+        #{score,jdbcType=DECIMAL}, #{studentId,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.epi.exam.entity.Score">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select REPLACE(UUID(),'-','')
+        </selectKey>
+        insert into score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="examId != null">
+                exam_id,
+            </if>
+            <if test="department != null">
+                department,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="studentId != null">
+                student_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="examId != null">
+                #{examId,jdbcType=VARCHAR},
+            </if>
+            <if test="department != null">
+                #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=DECIMAL},
+            </if>
+            <if test="studentId != null">
+                #{studentId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.epi.exam.entity.Score">
+        update score
+        <set>
+            <if test="examId != null">
+                exam_id = #{examId,jdbcType=VARCHAR},
+            </if>
+            <if test="department != null">
+                department = #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                score = #{score,jdbcType=DECIMAL},
+            </if>
+            <if test="studentId != null">
+                student_id = #{studentId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.epi.exam.entity.Score">
+    update score
+    set exam_id = #{examId,jdbcType=VARCHAR},
+      department = #{department,jdbcType=VARCHAR},
+      score = #{score,jdbcType=DECIMAL},
+      student_id = #{studentId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.epi.exam.dao.SelectQuestionDao">
+    <resultMap id="BaseResultMap" type="com.epi.exam.entity.SelectQuestion">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="question" jdbcType="VARCHAR" property="question"/>
+        <result column="question_type" jdbcType="VARCHAR" property="questionType"/>
+        <result column="a" jdbcType="VARCHAR" property="a"/>
+        <result column="b" jdbcType="VARCHAR" property="b"/>
+        <result column="c" jdbcType="VARCHAR" property="c"/>
+        <result column="d" jdbcType="VARCHAR" property="d"/>
+        <result column="answer" jdbcType="VARCHAR" property="answer"/>
+        <result column="difficulty" jdbcType="INTEGER" property="difficulty"/>
+        <result column="department" jdbcType="VARCHAR" property="department"/>
+        <result column="correct_ratio" jdbcType="DECIMAL" property="correctRatio"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
+        <result column="person_id" jdbcType="VARCHAR" property="personId"/>
+        <result column="add_time" jdbcType="DATE" property="addTime"/>
+        <result column="for_exam" jdbcType="INTEGER" property="forExam"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, question, question_type, a, b, c, d, answer, difficulty, department, correct_ratio, 
+    state, person_id, add_time, for_exam
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from select_question
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getSelectByDifficulty" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from select_question
+        where difficulty = #{difficulty,jdbcType=VARCHAR}
+    </select>
+    <select id="getSelectByDepartment" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from select_question
+        where department = #{department,jdbcType=VARCHAR}
+    </select>
+    <select id="getSelectByState" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from select_question
+        where state = #{state,jdbcType=VARCHAR}
+    </select>
+    <select id="getSelectByUser" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from select_question
+        where person_id = #{userId,jdbcType=VARCHAR}
+    </select>
+    <select id="getSelectByIsExam" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from select_question
+        where for_exam = #{isExam,jdbcType=INTEGER}
+    </select>
+    <select id="getQuestionSeletive" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from select_question
+        where
+        <if test="questionType != null">question_type
+            in
+            <foreach collection="questionType" item="Type" open="(" close=")" separator=",">
+                #{Type,jdbcType=VARCHAR}
+            </foreach>
+            and
+        </if>
+        <if test="difficulty != null">difficulty=#{difficulty,jdbcType=VARCHAR} and</if>
+        <if test="department != null">department=#{department,jdbcType=VARCHAR} and</if>
+        <if test="personId != null">person_id=#{personId,jdbcType=VARCHAR} and</if>
+        <if test="forExam != null">for_exam=#{forExam,jdbcType=INTEGER}</if>
+        and
+        state='审核通过'
+        order by department
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from select_question
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.epi.exam.entity.SelectQuestion">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select REPLACE(UUID(),'-','')
+        </selectKey>
+        insert into select_question (id, question, question_type,
+        a, b, c, d,
+        answer, difficulty, department,
+        correct_ratio, state, person_id,
+        add_time, for_exam)
+        values (#{id,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, #{questionType,jdbcType=VARCHAR},
+        #{a,jdbcType=VARCHAR}, #{b,jdbcType=VARCHAR}, #{c,jdbcType=VARCHAR}, #{d,jdbcType=VARCHAR},
+        #{answer,jdbcType=VARCHAR}, #{difficulty,jdbcType=INTEGER}, #{department,jdbcType=VARCHAR},
+        #{correctRatio,jdbcType=DECIMAL}, #{state,jdbcType=VARCHAR}, #{personId,jdbcType=VARCHAR},
+        #{addTime,jdbcType=DATE}, #{forExam,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.epi.exam.entity.SelectQuestion">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select REPLACE(UUID(),'-','')
+        </selectKey>
+        insert into select_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="question != null">
+                question,
+            </if>
+            <if test="questionType != null">
+                question_type,
+            </if>
+            <if test="a != null">
+                a,
+            </if>
+            <if test="b != null">
+                b,
+            </if>
+            <if test="c != null">
+                c,
+            </if>
+            <if test="d != null">
+                d,
+            </if>
+            <if test="answer != null">
+                answer,
+            </if>
+            <if test="difficulty != null">
+                difficulty,
+            </if>
+            <if test="department != null">
+                department,
+            </if>
+            <if test="correctRatio != null">
+                correct_ratio,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="personId != null">
+                person_id,
+            </if>
+            <if test="addTime != null">
+                add_time,
+            </if>
+            <if test="forExam != null">
+                for_exam,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="question != null">
+                #{question,jdbcType=VARCHAR},
+            </if>
+            <if test="questionType != null">
+                #{questionType,jdbcType=VARCHAR},
+            </if>
+            <if test="a != null">
+                #{a,jdbcType=VARCHAR},
+            </if>
+            <if test="b != null">
+                #{b,jdbcType=VARCHAR},
+            </if>
+            <if test="c != null">
+                #{c,jdbcType=VARCHAR},
+            </if>
+            <if test="d != null">
+                #{d,jdbcType=VARCHAR},
+            </if>
+            <if test="answer != null">
+                #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="difficulty != null">
+                #{difficulty,jdbcType=INTEGER},
+            </if>
+            <if test="department != null">
+                #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="correctRatio != null">
+                #{correctRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="personId != null">
+                #{personId,jdbcType=VARCHAR},
+            </if>
+            <if test="addTime != null">
+                #{addTime,jdbcType=DATE},
+            </if>
+            <if test="forExam != null">
+                #{forExam,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.epi.exam.entity.SelectQuestion">
+        update select_question
+        <set>
+            <if test="question != null">
+                question = #{question,jdbcType=VARCHAR},
+            </if>
+            <if test="questionType != null">
+                question_type = #{questionType,jdbcType=VARCHAR},
+            </if>
+            <if test="a != null">
+                a = #{a,jdbcType=VARCHAR},
+            </if>
+            <if test="b != null">
+                b = #{b,jdbcType=VARCHAR},
+            </if>
+            <if test="c != null">
+                c = #{c,jdbcType=VARCHAR},
+            </if>
+            <if test="d != null">
+                d = #{d,jdbcType=VARCHAR},
+            </if>
+            <if test="answer != null">
+                answer = #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="difficulty != null">
+                difficulty = #{difficulty,jdbcType=INTEGER},
+            </if>
+            <if test="department != null">
+                department = #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="correctRatio != null">
+                correct_ratio = #{correctRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="personId != null">
+                person_id = #{personId,jdbcType=VARCHAR},
+            </if>
+            <if test="addTime != null">
+                add_time = #{addTime,jdbcType=DATE},
+            </if>
+            <if test="forExam != null">
+                for_exam = #{forExam,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.epi.exam.entity.SelectQuestion">
+    update select_question
+    set question = #{question,jdbcType=VARCHAR},
+      question_type = #{questionType,jdbcType=VARCHAR},
+      a = #{a,jdbcType=VARCHAR},
+      b = #{b,jdbcType=VARCHAR},
+      c = #{c,jdbcType=VARCHAR},
+      d = #{d,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR},
+      difficulty = #{difficulty,jdbcType=INTEGER},
+      department = #{department,jdbcType=VARCHAR},
+      correct_ratio = #{correctRatio,jdbcType=DECIMAL},
+      state = #{state,jdbcType=VARCHAR},
+      person_id = #{personId,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=DATE},
+      for_exam = #{forExam,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    <update id="updateState">
+    update select_question
+    set state=#{param2,jdbcType=VARCHAR}
+    where id=#{param1,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.epi.exam.dao.RoleDao">
+    <resultMap id="BaseResultMap" type="com.epi.exam.entity.Role">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="role" jdbcType="VARCHAR" property="role"/>
+        <result column="authen" jdbcType="VARCHAR" property="authen"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, user_id, role, authen
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from role
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="findByUserId" resultType="com.epi.exam.entity.Role">
+        select
+        <include refid="Base_Column_List"/>
+        from role
+        where user_id=#{userid,jdbcType=VARCHAR}
+    </select>
+    <select id="findRoleIdByUserId" resultType="java.lang.String">
+        select id
+        from role
+        where user_id=#{userId,jdbcType=VARCHAR};
+    </select>
+    <select id="selectIdByUserId" resultType="java.lang.String">
+        select id
+        from role
+        where user_id=#{userId,jdbcType=VARCHAR};
+    </select>
+    <delete id="deleteByUserId" parameterType="string">
+        delete from role
+    where user_id = #{userId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.epi.exam.entity.Role">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select REPLACE(UUID(),'-','')
+        </selectKey>
+        insert into role (id, user_id, role,
+        authen)
+        values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR},
+        #{authen,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.epi.exam.entity.Role">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select REPLACE(UUID(),'-','')
+        </selectKey>
+        insert into role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="role != null">
+                role,
+            </if>
+            <if test="authen != null">
+                authen,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="role != null">
+                #{role,jdbcType=VARCHAR},
+            </if>
+            <if test="authen != null">
+                #{authen,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.epi.exam.entity.Role">
+        update role
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="role != null">
+                role = #{role,jdbcType=VARCHAR},
+            </if>
+            <if test="authen != null">
+                authen = #{authen,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.epi.exam.entity.Role">
+    update role
+    set user_id = #{userId,jdbcType=VARCHAR},
+      role = #{role,jdbcType=VARCHAR},
+      authen = #{authen,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    <update id="updateRole">
+    update role
+    set role = #{param2,jdbcType=VARCHAR}
+    where user_id = #{param1,jdbcType=VARCHAR}
+  </update>
+</mapper>
