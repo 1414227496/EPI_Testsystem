@@ -28,8 +28,8 @@ public class SendSms {
 
 
 		DefaultProfile profile = DefaultProfile.getProfile( "cn-hangzhou",
-				"LTAI4FiNMxnYr272JC2S2isR",
-				"oXo49qGu3H6PtQlOWBsIgod3xyff41" );
+				"546767R",
+				"568768767" );
 		IAcsClient client = new DefaultAcsClient( profile );
 
 		CommonRequest request = new CommonRequest();
